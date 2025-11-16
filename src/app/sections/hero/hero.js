@@ -68,7 +68,7 @@ export default function Hero({ scrollRef }) {
           A&D Global Trader brings buyers and suppliers together on one secure platform. Discover verified manufacturers, competitive pricing, and smooth global shipping all in one place.
         </div>
 
-        <button className={styles.ctaButton} ref={buttonRef}>
+        <button onClick={()=>scrollRef("contact")} className={styles.ctaButton} ref={buttonRef}>
           Explore Products
         </button>
       </div>

@@ -63,7 +63,7 @@ export default function Home() {
     <div className={styles.page}>
       <Navbar sections={scrollTo} />
       <div ref={(el) => sections.current.home = el}>
-        <Hero />
+        <Hero scrollRef={scrollTo} />
       </div>
       <Badges />
       <div ref={(el) => sections.current.category = el}>
