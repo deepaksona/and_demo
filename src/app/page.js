@@ -70,7 +70,7 @@ export default function Home() {
         <Categories />
       </div>
       <div ref={(el) => sections.current.feature = el}>
-        <Featured />
+        <Featured scrollRef={scrollTo} />
       </div>
       <div ref={(el) => sections.current.about = el}>
         <About />

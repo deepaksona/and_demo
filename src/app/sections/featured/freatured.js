@@ -158,7 +158,7 @@ export default function Featured({ scrollRef }) {
               {products[index].description}
             </div>
 
-            <button className={styles.contactButton}>
+            <button onClick={()=>scrollRef("contact")} className={styles.contactButton}>
               Contact To Know More
             </button>
           </div>
