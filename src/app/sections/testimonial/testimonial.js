@@ -29,28 +29,51 @@ export default function Testimonial() {
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+  if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // ⭐ Mobile scroll height fix
-      setTimeout(() => ScrollTrigger.refresh(), 200);
+  
+  const imgs = Array.from(
+    sectionRef.current.querySelectorAll("img")
+  );
 
-      gsap.from(sectionRef.current, {
-        opacity: 0,
-        y: 25,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 95%",  // ⭐ Mobile-friendly trigger
-          once: true,         // ⭐ Prevent re-animation + improve performance
-          toggleActions: "play none none none"
-        },
-      });
-    }, sectionRef);
+  let loaded = 0;
 
-    return () => ctx.revert();
-  }, []);
+  function startAnim() {
+    setTimeout(() => ScrollTrigger.refresh(), 150);
+
+    gsap.from(sectionRef.current, {
+      opacity: 0,
+      y: 25,
+      duration: 1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 96%", // mobile-friendly
+        once: true,
+      },
+    });
+  }
+
+  // If NO images → run animation immediately
+  if (imgs.length === 0) {
+    startAnim();
+    return;
+  }
+
+  // Check image loading
+  imgs.forEach((img) => {
+    if (img.complete) {
+      loaded++;
+      if (loaded === imgs.length) startAnim();
+    } else {
+      img.onload = () => {
+        loaded++;
+        if (loaded === imgs.length) startAnim();
+      };
+    }
+  });
+}, []);
+
 
   return (
     <div className={styles.testimonialSection} ref={sectionRef}>

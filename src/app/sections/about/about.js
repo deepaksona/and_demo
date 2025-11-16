@@ -15,54 +15,58 @@ export default function About({ scrollRef }) {
   const imageRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // ⭐ Mobile safe trigger fix
-      setTimeout(() => ScrollTrigger.refresh(), 200);
+  if (!sectionRef.current) return;
 
-      // Title Animation
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 25,
-        duration: 0.8,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 95%",
-          once: true,
-        },
-      });
+  const img = sectionRef.current.querySelector(`.${styles.imageContent}`);
 
-      // Subtitle animation
-      gsap.from(subtitleRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.9,
-        delay: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 92%",
-          once: true,
-        },
-      });
+  function startAnim() {
+    setTimeout(() => ScrollTrigger.refresh(), 150);
 
-      // Image animation
-      gsap.from(imageRef.current, {
-        opacity: 0,
-        x: 40,
-        duration: 1,
-        delay: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 90%",
-          once: true,
-        },
-      });
-    }, sectionRef);
+    gsap.from(titleRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 96%",
+        once: true,
+      },
+    });
 
-    return () => ctx.revert();
-  }, []);
+    gsap.from(subtitleRef.current, {
+      opacity: 0,
+      y: 18,
+      duration: 0.9,
+      delay: 0.1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 95%",
+        once: true,
+      },
+    });
+
+    gsap.from(imageRef.current, {
+      opacity: 0,
+      x: 30,
+      duration: 1,
+      delay: 0.15,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 93%",
+        once: true,
+      },
+    });
+  }
+
+
+  if (img.complete) startAnim();
+  else img.onload = startAnim;
+
+}, []);
+
 
   return (
     <div className={styles.aboutSection} ref={sectionRef}>

@@ -46,12 +46,31 @@ export default function Featured({ scrollRef }) {
 
   const [index, setIndex] = useState(0);
 
-  // ⭐ SIMPLE GSAP ANIMATION
+
  useEffect(() => {
   if (!sectionRef.current) return;
 
-  const ctx = gsap.context(() => {
-    // ⭐ Fix mobile viewport calculation delay
+
+  const imgs = Array.from(
+    sectionRef.current.querySelectorAll("img")
+  );
+
+  let loaded = 0;
+
+  imgs.forEach((img) => {
+    if (img.complete) {
+      loaded++;
+    } else {
+      img.onload = () => {
+        loaded++;
+        if (loaded === imgs.length) startAnim();
+      };
+    }
+  });
+
+  if (loaded === imgs.length) startAnim();
+
+  function startAnim() {
     setTimeout(() => ScrollTrigger.refresh(), 200);
 
     gsap.from(sectionRef.current, {
@@ -61,15 +80,13 @@ export default function Featured({ scrollRef }) {
       ease: "power3.out",
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 92%",      
-        once: true,             
-        toggleActions: "play none none none",
+        start: "top 95%",   // ⭐ mobile-friendly
+        once: true,
       },
     });
-  });
-
-  return () => ctx.revert();
+  }
 }, []);
+
 
 
   // AUTO SLIDE

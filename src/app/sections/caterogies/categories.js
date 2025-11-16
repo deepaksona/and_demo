@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -21,34 +23,42 @@ export default function Categories() {
   ];
 
   useEffect(() => {
-    if (!itemsRef.current.length) return;
+    // ⭐ WAIT UNTIL ALL IMAGES LOADED
+    const allImages = Array.from(document.querySelectorAll(`.${styles.itemImage}`));
 
-    const ctx = gsap.context(() => {
-      // ⭐ Mobile height fix (very important)
+    let loaded = 0;
+
+    allImages.forEach((img) => {
+      if (img.complete) loaded++;
+      else img.onload = () => {
+        loaded++;
+        if (loaded === allImages.length) startAnimation();
+      };
+    });
+
+    if (loaded === allImages.length) startAnimation();
+
+    function startAnimation() {
       setTimeout(() => ScrollTrigger.refresh(), 200);
 
       gsap.from(itemsRef.current, {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
+        y: 25,
+        duration: 0.7,
         stagger: 0.12,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: itemsRef.current[0],    // safe trigger
-          start: "top 92%",                // ⭐ mobile-friendly start point
-          once: true,                      // ⭐ boosts mobile performance
-          toggleActions: "play none none none",
+          trigger: itemsRef.current[0],
+          start: "top 92%",
+          once: true,
         },
       });
-    });
-
-    return () => ctx.revert();
+    }
   }, []);
 
   return (
     <div className={styles.categoriesSection}>
       <div className={styles.categoryTitle}>Browse Our Main Categories</div>
-
       <div className={styles.categorySubtitle}>
         Explore a diverse and constantly growing catalog of products sourced directly from certified manufacturers:
       </div>

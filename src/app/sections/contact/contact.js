@@ -35,14 +35,14 @@ export default function Contact({ scrollRef }) {
  useEffect(() => {
   if (!sectionRef.current) return;
 
-  const ctx = gsap.context(() => {
-
+  function startAnim() {
     setTimeout(() => ScrollTrigger.refresh(), 150);
 
+    // ⭐ Lottie animation
     gsap.from(lottieRef.current, {
       opacity: 0,
       y: 20,
-      duration: 0.7,
+      duration: 0.8,
       ease: "power3.out",
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -51,12 +51,12 @@ export default function Contact({ scrollRef }) {
       },
     });
 
-    // ⭐ Form fade
+    // ⭐ Form Box
     gsap.from(formBoxRef.current, {
       opacity: 0,
       y: 15,
-      duration: 0.8,
-      delay: 0.05,
+      duration: 0.9,
+      delay: 0.1,
       ease: "power3.out",
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -65,23 +65,32 @@ export default function Contact({ scrollRef }) {
       },
     });
 
-    
+    // ⭐ Inputs stagger (NO opacity change → MOBILE FIX)
     gsap.from(inputsRef.current, {
-      y: 15,
+      y: 12,
       duration: 0.55,
-      stagger: 0.10,
-      delay: 0.15,
+      stagger: 0.1,
+      delay: 0.2,
       ease: "power2.out",
       scrollTrigger: {
         trigger: formBoxRef.current,
-        start: "top 93%",
+        start: "top 94%",
         once: true,
       },
     });
-  }, sectionRef);
+  }
 
-  return () => ctx.revert();
-}, []);
+  // ⭐ WAIT UNTIL LOTTIE FINISHES LOADING
+  const interval = setInterval(() => {
+    if (animation) {
+      clearInterval(interval);
+      startAnim();
+    }
+  }, 50);
+
+  return () => clearInterval(interval);
+}, [animation]);
+
 
 
   return (

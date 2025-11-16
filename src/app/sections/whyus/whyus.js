@@ -31,58 +31,62 @@ export default function Whyus() {
   }, []);
 
   useEffect(() => {
-    if (!sectionRef.current) return;
+  if (!sectionRef.current || !animation) return;
 
-    const ctx = gsap.context(() => {
-      
-      // ⭐ Fix mobile height issue
-      setTimeout(() => ScrollTrigger.refresh(), 200);
+  const ctx = gsap.context(() => {
 
-      // ⭐ Lottie animation
-      gsap.from(lottieRef.current, {
-        opacity: 0,
-        y: 25,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 95%",   // mobile-friendly
-          once: true          // performance boost
-        },
-      });
+    // ⭐ Wait for layout to settle
+    setTimeout(() => {
+      ScrollTrigger.refresh();  // ⭐ IMPORTANT FIX
+    }, 100);
 
-      // ⭐ Title
-      gsap.from(titleRef.current, {
-        opacity: 0,
-        y: 20,
-        duration: 0.9,
-        delay: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 93%",
-          once: true
-        },
-      });
+    // ⭐ Lottie animation
+    gsap.from(lottieRef.current, {
+      opacity: 0,
+      y: 25,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 95%",
+        once: true,
+      },
+    });
 
-      // ⭐ List Items stagger
-      gsap.from(listRefs.current, {
-        opacity: 0,
-        y: 18,
-        duration: 0.7,
-        stagger: 0.14,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: listRefs.current[0],
-          start: "top 92%",
-          once: true
-        },
-      });
+    // ⭐ Title
+    gsap.from(titleRef.current, {
+      opacity: 0,
+      y: 18,
+      duration: 0.8,
+      delay: 0.1,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 94%",
+        once: true,
+      },
+    });
 
-    }, sectionRef);
+    // ⭐ List stagger
+    gsap.from(listRefs.current, {
+      opacity: 0,
+      y: 15,
+      duration: 0.6,
+      stagger: 0.12,
+      delay: 0.15,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: listRefs.current[0],
+        start: "top 92%",
+        once: true,
+      },
+    });
 
-    return () => ctx.revert();
-  }, []);
+  }, sectionRef);
+
+  return () => ctx.revert();
+}, [animation]);   
+
 
   return (
     <div className={styles.whyusSection} ref={sectionRef}>
