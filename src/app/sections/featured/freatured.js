@@ -30,7 +30,7 @@ export default function Featured({ scrollRef }) {
       description: `Bring a smile to your day with this adorable 3D Panda Silicone Keychain! Crafted from high-quality, soft PVC rubber, this charm is durable, lightweight, and gentle to the touch. The cute cartoon design features a cheerful panda with sweet rosy cheeks and even includes a tiny green bamboo accessory.
       
       It's the perfect accessory for adding personality to your everyday items. Easily attach it to your backpack, purse, car keys, house keys, or lanyard using the sturdy metal ring. A fantastic gift for panda lovers, children, teens, and anyone who loves cute animal accessories. Get yours today and carry a little bit of cuteness wherever you go!`,
-      images: ["/keychain.png", "/keychain.png", "/keychain.png"],
+      images: ["/keychain.webp", "/keychain.webp", "/keychain.webp"],
      
     },
     {
@@ -39,7 +39,7 @@ export default function Featured({ scrollRef }) {
       description: `This USB rechargeable portable blender is the ideal partner for a healthy, active lifestyle. Designed for ultimate convenience, this mini electric juicer allows you to mix fresh smoothies, protein shakes, and baby food quickly, whether you are at the gym, traveling, or commuting. 
       
       It features a powerful 6-blade stainless steel system capable of crushing ice and frozen fruits effortlessly. The blender is lightweight, compact, and completely safe, being made from BPA-free materials. It charges easily via USB, providing multiple uses per charge, ensuring you never miss out on your essential nutrients. Simply blend, drink, and go!`,
-      images: ["/mixer.png", "/mixer.png", "/mixer.png"],
+      images: ["/mixer.webp", "/mixer.webp", "/mixer.webp"],
    
     },
   ];

@@ -1,5 +1,5 @@
 export const images = {
-    logo: "/logo.png",
+    logo: "/logo.webp",
     product: "/products.png",
     globalTrade: "/globalTrade.png",
     tradeProtection: "/tradeProtection.png",
@@ -12,7 +12,7 @@ export const images = {
     automotive: "/automotive.png",
     agriculture:"/agriculture.png",
     industrial:"/industrial.png",
-    team:"/team.png"
+    team:"/team.webp"
     
 
 };
