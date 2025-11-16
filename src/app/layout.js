@@ -1,5 +1,8 @@
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import GlobalGSAPFix from "./globalGsap";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <GlobalGSAPFix/>
         {children}
       </body>
     </html>
