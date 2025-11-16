@@ -8,11 +8,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Testimonial() {
   const testimonials = [
-    { name: "Rahul Mehta", company: "Mehta Electronics, Mumbai", picture: "/team.png", message: `A&D Global Trader has completely changed the way we source products.` },
-    { name: "Sana Khan", company: "Khan Home & Living, Delhi", picture: "/team.png", message: `Finding dependable suppliers used to be a challenge.` },
-    { name: "Rohit Sharma", company: "RS Retail Solutions, Bangalore", picture: "/team.png", message: `Their global supplier network helped us.` },
-    { name: "Neha Verma", company: "Urban Style Apparel, Jaipur", picture: "/team.png", message: `We source fashion accessories regularly.` },
-    { name: "Amit Patel", company: "Patel Industrial Tools, Ahmedabad", picture: "/team.png", message: `Quality checks saved us from risky purchases.` },
+    { name: "Rahul Mehta", company: "Mehta Electronics, Mumbai", picture: "/team.webp", message: `A&D Global Trader has completely changed the way we source products.` },
+    { name: "Sana Khan", company: "Khan Home & Living, Delhi", picture: "/team.webp", message: `Finding dependable suppliers used to be a challenge.` },
+    { name: "Rohit Sharma", company: "RS Retail Solutions, Bangalore", picture: "/team.webp", message: `Their global supplier network helped us.` },
+    { name: "Neha Verma", company: "Urban Style Apparel, Jaipur", picture: "/team.webp", message: `We source fashion accessories regularly.` },
+    { name: "Amit Patel", company: "Patel Industrial Tools, Ahmedabad", picture: "/team.webp", message: `Quality checks saved us from risky purchases.` },
   ];
 
   const [current, setCurrent] = useState(0);
