@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+.testimonialSection {
+  width: 95%;
+  padding: 60px 20px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  margin: 0 auto;
+  background: url("../../../../public/testimonialbg.png");
+  background-size: contain; 
+  border: 2px solid #dce4ea;
+  border-radius: 16px;
+  
+
+  
+}
+
+.heading {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  color: #13304f;
+}
+
+/* Slider Container */
+
+.slider {
+  position: relative;
+  width: 100%;
+  max-width: 900px; 
+  margin: auto;
+  min-height: 380px;
+}
+
+/* Card styling */
+.card {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100%;
+  max-width: 700px; 
+  background: #ffffff;
+  padding: 40px; 
+  border-radius: 20px;
+  border: 1px solid #e3e8ee;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+  text-align: center;
+}
+
+/* Active card appears */
+.active {
+  opacity: 1;
+}
+
+/* Hidden card */
+.hidden {
+  opacity: 0;
+}
+
+/* Avatar bigger */
+.avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  object-fit: cover;
+}
+
+/* Name */
+.name {
+  font-size: 24px;     
+  font-weight: 700;
+  color: #13304f;
+  margin-bottom: 4px;
+}
+
+/* Company text */
+.company {
+  font-size: 15px;
+  color: #777;
+  margin-bottom: 22px;
+}
+
+/* Message bigger + clean */
+.message {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #333;
+  padding: 0 20px;
+}
+
+/* Dots */
+.dots {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background: #cdd6df;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+.activeDot {
+  background: #13304f;
+  width: 12px;
+  height: 12px;
+}

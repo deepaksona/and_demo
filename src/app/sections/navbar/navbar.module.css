@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+.navbarSection {
+  width: 100%;
+  padding: 20px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* Logo */
+.logo {
+  height: 60px;
+  width: auto;
+}
+
+/* Desktop Menu */
+.menu {
+  display: flex;
+  gap: 25px;
+  color: black;
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  list-style: none;
+}
+
+.menuItems {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menuItems:hover {
+  transform: scale(1.15);
+}
+
+/* Contact Button */
+.loginSection {
+  display: flex;
+  gap: 20px;
+}
+
+.login {
+  height: 40px;
+  width: 100px;
+  background-color: #13304f;
+  border: none;
+  color: white;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+    font-size: 16px;
+}
+
+.login:hover {
+  transform: scale(1.15);
+}
+
+/* Hamburger (Visible Only on Mobile) */
+.hamburger {
+  display: none;
+  cursor: pointer;
+  color: #13304f
+}
+
+/* ------------------- DRAWER ------------------- */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 270px;
+  height: 100vh;
+  background: #13304f;
+  color: white;
+  padding: 25px;
+  transition: 0.4s ease;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.openDrawer {
+  right: 0;
+}
+
+.drawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawerLogo {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.closeIcon {
+  cursor: pointer;
+}
+
+.drawerMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  list-style-type: none;
+  font-size: 18px;
+}
+
+.drawerMenu li {
+  cursor: pointer;
+  opacity: 0.9;
+  transition: 0.3s;
+}
+
+.drawerMenu li:hover {
+  opacity: 1;
+  transform: translateX(8px);
+}
+
+.drawerBtn {
+  background: white;
+  color: #13304f;
+  padding: 10px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: auto;
+}
+
+/* Overlay when drawer opens */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(1px);
+  z-index: 1999;
+}
+
+@media (max-width: 900px) {
+  .menu,
+  .loginSection {
+
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+}

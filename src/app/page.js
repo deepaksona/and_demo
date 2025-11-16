@@ -1,66 +1,88 @@
-import Image from "next/image";
+"use client"
+import { useRef } from "react";
 import styles from "./page.module.css";
+import About from "./sections/about/about";
+import Badges from "./sections/badges/badges";
+import Categories from "./sections/caterogies/categories";
+import Contact from "./sections/contact/contact";
+import Featured from "./sections/featured/freatured";
+import Footer from "./sections/footer/footer";
+import Hero from "./sections/hero/hero";
+import Navbar from "./sections/navbar/navbar";
+import Testimonial from "./sections/testimonial/testimonial";
+import Whyus from "./sections/whyus/whyus";
 
 export default function Home() {
+  const sections = useRef({
+    home: null,
+    about: null,
+    category: null,
+    feature: null,
+    testimonial: null,
+    contact: null
+  });
+
+  const easeInOutCubic = (t) => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  const scrollTo = (key) => {
+    const target = sections.current[key];
+    
+    if (!target) {
+      alert("Target not found!");
+      return;
+    }
+
+    const targetPosition = target.offsetTop;
+    const startPosition = document.documentElement.scrollTop || document.body.scrollTop;
+    const distance = targetPosition - startPosition;
+    const duration = 1500;
+    let startTime = null;
+
+    const animation = (currentTime) => {
+      if (startTime === null) startTime = currentTime;
+
+      const timeElapsed = currentTime - startTime;
+      const progress = Math.min(timeElapsed / duration, 1);
+      const ease = easeInOutCubic(progress);
+
+      const newPosition = startPosition + distance * ease;
+      document.documentElement.scrollTop = newPosition;
+      document.body.scrollTop = newPosition; // For Safari
+
+      if (progress < 1) {
+        requestAnimationFrame(animation);
+      }
+    };
+
+    requestAnimationFrame(animation);
+  };
+
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      <Navbar sections={scrollTo} />
+      <div ref={(el) => sections.current.home = el}>
+        <Hero />
+      </div>
+      <Badges />
+      <div ref={(el) => sections.current.category = el}>
+        <Categories />
+      </div>
+      <div ref={(el) => sections.current.feature = el}>
+        <Featured />
+      </div>
+      <div ref={(el) => sections.current.about = el}>
+        <About />
+      </div>
+      <Whyus />
+      <div ref={(el) => sections.current.testimonial = el}>
+        <Testimonial />
+      </div>
+      <div ref={(el) => sections.current.contact = el}>
+        <Contact />
+      </div>
+      <Footer />
     </div>
   );
 }

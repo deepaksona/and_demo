@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+.footerSection {
+  width: 100%;
+  background: #13304F;
+  padding: 50px 30px 20px;
+  color: white;
+  box-sizing: border-box;
+  margin-top: 40px;
+  font-family: 'Inter', sans-serif;
+}
+
+.footerWrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.companyBox {
+  width: 260px;
+}
+
+.logo {
+ height: 100px;
+ width: auto;
+  background-color: white;
+  border-radius: 12px;
+  object-fit: contain;
+  padding: 10px;
+}
+
+.about {
+  margin-top: 10px;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+.linksBox h3,
+.contactBox h3 {
+  font-size: 18px;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.linksBox ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.linksBox li {
+  margin-bottom: 8px;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.3s;
+}
+
+.linksBox li:hover {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+.contactBox p {
+  margin: 5px 0;
+  opacity: 0.85;
+}
+
+.socialRow {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.socialRow > * {
+  transition: 0.3s;
+}
+
+.socialRow > *:hover {
+  transform: scale(1.15);
+}
+
+.bottomBar {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  opacity: 0.75;
+  font-size: 14px;
+}
+
+
+@media (max-width: 900px) {
+  .footerWrapper {
+    flex-direction: column;
+  }
+}

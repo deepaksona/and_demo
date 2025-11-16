@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+
+.heroSection {
+  height: 80vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .heroBanner {
+    position: relative;
+    height: 90%;
+    width: 95%;
+    border-radius: 30px;
+    overflow: hidden;
+
+    /* Background Image / Video */
+    .heroVideo,
+    .heroImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Dark overlay */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.87),
+        rgba(0, 0, 0, 0.25)
+      );
+      z-index: 2;
+    }
+
+    /* Desktop */
+    .heading {
+      position: absolute;
+      top: 25%;
+      left: 40px;
+      width: 55%;
+      color: white;
+      font-size: 32px;
+      z-index: 3;
+      font-weight: 700;
+      line-height: 1.3;
+      font-family: "Inter", sans-serif;
+    }
+
+    .subheading {
+      position: absolute;
+      top: 45%;
+      left: 40px;
+      width: 50%;
+      color: white;
+      font-size: 20px;
+      z-index: 3;
+      line-height: 28px;
+      font-weight: 400;
+      font-family: "Inter", sans-serif;
+    }
+
+    .ctaButton {
+      position: absolute;
+      top: 75%;
+      left: 40px;
+      z-index: 4;
+      padding: 12px 25px;
+      background-color: #13304f;
+      border: 1px solid white;
+      font-weight: 600;
+      font-size: 15px;
+      border-radius: 30px;
+      font-family: "Inter", sans-serif;
+      cursor: pointer;
+      transition: 0.3s ease-in-out;
+      color: white;
+
+      &:hover {
+        transform: scale(1.15);
+        box-shadow: 0 0 10px 1px white;
+      }
+    }
+
+    /* Tablet */
+    @media (max-width: 992px) {
+      .heading {
+        top: 20%;
+        left: 30px;
+        width: 70%;
+        font-size: 28px;
+      }
+
+      .subheading {
+        top: 42%;
+        left: 30px;
+        width: 70%;
+        font-size: 16px;
+      }
+
+      .ctaButton {
+        top: 68%;
+        left: 30px;
+        padding: 10px 20px;
+        font-size: 14px;
+      }
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .heading {
+        top: 22%;
+        left: 20px;
+        width: 85%;
+        font-size: 22px;
+        line-height: 1.4;
+      }
+
+      .subheading {
+        top: 40%;
+        left: 20px;
+        width: 85%;
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      .ctaButton {
+        top: 65%;
+        left: 20px;
+        padding: 10px 18px;
+        font-size: 13px;
+      }
+    }
+  }
+}
