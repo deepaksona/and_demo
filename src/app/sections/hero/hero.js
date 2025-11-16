@@ -13,40 +13,46 @@ export default function Hero({ scrollRef }) {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Fade-in + Slide animation when hero section enters viewport
+      
+      // ⭐ IMPORTANT: Delay GSAP init so mobile height issues fix ho jaye
+      setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
+
+      // ⭐ Universal animation settings (mobile safe)
+      const common = {
+        duration: 0.9,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 95%",       // ⭐ Mobile-friendly trigger
+          toggleActions: "play none none none",
+          once: true              // ⭐ Only once → no lag
+        }
+      };
+
+      // Heading Animation
       gsap.from(headingRef.current, {
-        y: 40,
+        y: 35,
         opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 80%", // जब viewport में आये तब
-        },
+        ...common
       });
 
+      // Subheading Animation
       gsap.from(subheadingRef.current, {
-        y: 40,
+        y: 30,
         opacity: 0,
-        duration: 1,
-        delay: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 70%",
-        },
+        delay: 0.15,
+        ...common
       });
 
+      // Button Animation
       gsap.from(buttonRef.current, {
-        scale: 0.8,
+        scale: 0.85,
         opacity: 0,
-        duration: 0.8,
-        delay: 0.3,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 60%",
-        },
+        delay: 0.25,
+        ease: "back.out(1.8)",
+        ...common
       });
     }, sectionRef);
 
@@ -68,7 +74,11 @@ export default function Hero({ scrollRef }) {
           A&D Global Trader brings buyers and suppliers together on one secure platform. Discover verified manufacturers, competitive pricing, and smooth global shipping all in one place.
         </div>
 
-        <button onClick={()=>scrollRef("contact")} className={styles.ctaButton} ref={buttonRef}>
+        <button
+          onClick={() => scrollRef("contact")}
+          className={styles.ctaButton}
+          ref={buttonRef}
+        >
           Explore Products
         </button>
       </div>

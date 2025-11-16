@@ -34,42 +34,51 @@ export default function Whyus() {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Lottie fade-in
+      
+      // ⭐ Fix mobile height issue
+      setTimeout(() => ScrollTrigger.refresh(), 200);
+
+      // ⭐ Lottie animation
       gsap.from(lottieRef.current, {
         opacity: 0,
-        y: 30,
-        duration: 0.8,
+        y: 25,
+        duration: 0.9,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 85%",
+          start: "top 95%",   // mobile-friendly
+          once: true          // performance boost
         },
       });
 
-      // Title fade-in
+      // ⭐ Title
       gsap.from(titleRef.current, {
         opacity: 0,
         y: 20,
-        duration: 0.8,
+        duration: 0.9,
+        delay: 0.1,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          start: "top 93%",
+          once: true
         },
       });
 
-      // ⭐ LIST ITEMS (stagger + scroll)
+      // ⭐ List Items stagger
       gsap.from(listRefs.current, {
         opacity: 0,
-        y: 20,
+        y: 18,
         duration: 0.7,
-        stagger: 0.15,
+        stagger: 0.14,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: listRefs.current[0], // ⭐ Trigger first li
-          start: "top 90%",             // Comes on scroll
+          trigger: listRefs.current[0],
+          start: "top 92%",
+          once: true
         },
       });
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -78,6 +87,7 @@ export default function Whyus() {
   return (
     <div className={styles.whyusSection} ref={sectionRef}>
       <div className={styles.whyusRow}>
+        
         {animation && (
           <div className={styles.lottieWrapper} ref={lottieRef}>
             <Lottie animationData={animation} />
@@ -101,6 +111,7 @@ export default function Whyus() {
               </li>
             ))}
           </ul>
+
         </div>
       </div>
     </div>

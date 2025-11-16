@@ -28,58 +28,61 @@ export default function Contact({ scrollRef }) {
 
   useEffect(() => {
     fetch(lotties.contact)
-      .then((res) => res.json())
-      .then((data) => setAnimation(data));
+      .then(res => res.json())
+      .then(data => setAnimation(data));
   }, []);
 
-  // ⭐ SIMPLE GSAP ANIMATION
-  useEffect(() => {
-    if (!sectionRef.current) return;
+ useEffect(() => {
+  if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // Lottie animation fade-in
-      gsap.from(lottieRef.current, {
-        opacity: 0,
-        y: 40,
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-        },
-      });
+  const ctx = gsap.context(() => {
 
-      // Form box fade
-      gsap.from(formBoxRef.current, {
-        opacity: 0,
-        y: 0,
-        duration: 0.9,
-        delay: 0.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 85%",
-        },
-      });
+    setTimeout(() => ScrollTrigger.refresh(), 150);
 
-      // Each input stagger
-      gsap.from(inputsRef.current, {
-        opacity: 1,
-        y: 20,
-        duration: 0.7,
-        stagger: 0.12,
-        delay: 0.3,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: formBoxRef.current,
-          start: "top 85%",
-          
-        },
-      });
-    }, sectionRef);
+    gsap.from(lottieRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.7,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 96%",
+        once: true,
+      },
+    });
 
-    return () => ctx.revert();
-  }, []);
+    // ⭐ Form fade
+    gsap.from(formBoxRef.current, {
+      opacity: 0,
+      y: 15,
+      duration: 0.8,
+      delay: 0.05,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 95%",
+        once: true,
+      },
+    });
+
+    
+    gsap.from(inputsRef.current, {
+      y: 15,
+      duration: 0.55,
+      stagger: 0.10,
+      delay: 0.15,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: formBoxRef.current,
+        start: "top 93%",
+        once: true,
+      },
+    });
+  }, sectionRef);
+
+  return () => ctx.revert();
+}, []);
+
 
   return (
     <div className={styles.contactSection} ref={sectionRef}>

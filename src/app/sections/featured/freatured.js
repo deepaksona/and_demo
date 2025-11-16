@@ -47,18 +47,30 @@ export default function Featured({ scrollRef }) {
   const [index, setIndex] = useState(0);
 
   // ⭐ SIMPLE GSAP ANIMATION
-  useEffect(() => {
+ useEffect(() => {
+  if (!sectionRef.current) return;
+
+  const ctx = gsap.context(() => {
+    // ⭐ Fix mobile viewport calculation delay
+    setTimeout(() => ScrollTrigger.refresh(), 200);
+
     gsap.from(sectionRef.current, {
       opacity: 0,
-      y: 40,
-      duration: 1.5,
+      y: 30,
+      duration: 1,
       ease: "power3.out",
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 85%",
+        start: "top 92%",      
+        once: true,             
+        toggleActions: "play none none none",
       },
     });
-  }, []);
+  });
+
+  return () => ctx.revert();
+}, []);
+
 
   // AUTO SLIDE
   useEffect(() => {

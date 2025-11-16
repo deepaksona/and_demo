@@ -17,7 +17,7 @@ export default function Testimonial() {
 
   const [current, setCurrent] = useState(0);
 
-  // Auto slide
+  // ⭐ Auto slide
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % testimonials.length);
@@ -25,20 +25,31 @@ export default function Testimonial() {
     return () => clearInterval(timer);
   }, []);
 
-  // GSAP fade on scroll (only on section)
+  // ⭐ GSAP optimized for mobile
   const sectionRef = useRef(null);
 
   useEffect(() => {
-    gsap.from(sectionRef.current, {
-      opacity: 0,
-      y: 40,
-      duration: 1.5,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 85%",
-      },
-    });
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      // ⭐ Mobile scroll height fix
+      setTimeout(() => ScrollTrigger.refresh(), 200);
+
+      gsap.from(sectionRef.current, {
+        opacity: 0,
+        y: 25,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 95%",  // ⭐ Mobile-friendly trigger
+          once: true,         // ⭐ Prevent re-animation + improve performance
+          toggleActions: "play none none none"
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (

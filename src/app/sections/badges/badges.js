@@ -7,7 +7,6 @@ import { images } from "@/app/utilities/assets_path/assets_path";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Badges() {
-
   const badgesRef = useRef([]);
 
   const badgesList = [
@@ -30,17 +29,28 @@ export default function Badges() {
   ];
 
   useEffect(() => {
-    gsap.from(badgesRef.current, {
-      opacity: 0,
-      y: 50,
-      duration: 1,
-      stagger: 0.25,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: badgesRef.current[0],
-        start: "top 80%",
-      }
+    if (!badgesRef.current.length) return;
+
+    const ctx = gsap.context(() => {
+      // ⭐ delay refresh to avoid mobile height issues
+      setTimeout(() => ScrollTrigger.refresh(), 200);
+
+      gsap.from(badgesRef.current, {
+        opacity: 0,
+        y: 35,
+        duration: 0.8,
+        stagger: 0.18,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: badgesRef.current[0],   // ⭐ ensuring first badge triggers animation
+          start: "top 92%",                // ⭐ mobile safe start point
+          once: true,                      // ⭐ only once — mobile performance boost
+          toggleActions: "play none none none",
+        },
+      });
     });
+
+    return () => ctx.revert();
   }, []);
 
   return (
