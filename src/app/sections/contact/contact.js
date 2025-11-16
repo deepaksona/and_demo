@@ -7,147 +7,106 @@ import { lotties } from "@/app/utilities/assets_path/assets_path";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Contact({ scrollRef }) {
+export default function Contact() {
   const [animation, setAnimation] = useState(null);
 
   const sectionRef = useRef(null);
   const lottieRef = useRef(null);
-  const formBoxRef = useRef(null);
+  const formRef = useRef(null);
+
   const inputsRef = useRef([]);
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    message: "",
-  });
-
+  // Load lottie (doesn't block UI)
   useEffect(() => {
     fetch(lotties.contact)
-      .then(res => res.json())
-      .then(data => setAnimation(data));
+      .then((res) => res.json())
+      .then((data) => setAnimation(data));
   }, []);
 
- useEffect(() => {
-  if (!sectionRef.current) return;
+  // ⭐ SUPER SAFE MOBILE ANIMATIONS
+  useEffect(() => {
+    if (!sectionRef.current) return;
 
-  function startAnim() {
-    setTimeout(() => ScrollTrigger.refresh(), 150);
+    setTimeout(() => ScrollTrigger.refresh(), 120);
 
-    // ⭐ Lottie animation
+    // LOTTIE fade
     gsap.from(lottieRef.current, {
       opacity: 0,
       y: 20,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 96%",
-        once: true,
-      },
-    });
-
-    // ⭐ Form Box
-    gsap.from(formBoxRef.current, {
-      opacity: 0,
-      y: 15,
-      duration: 0.9,
-      delay: 0.1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 95%",
-        once: true,
-      },
-    });
-
-    // ⭐ Inputs stagger (NO opacity change → MOBILE FIX)
-    gsap.from(inputsRef.current, {
-      y: 12,
-      duration: 0.55,
-      stagger: 0.1,
-      delay: 0.2,
+      duration: 0.7,
       ease: "power2.out",
       scrollTrigger: {
-        trigger: formBoxRef.current,
-        start: "top 94%",
+        trigger: sectionRef.current,
+        start: "top 92%",
         once: true,
       },
     });
-  }
 
-  // ⭐ WAIT UNTIL LOTTIE FINISHES LOADING
-  const interval = setInterval(() => {
-    if (animation) {
-      clearInterval(interval);
-      startAnim();
-    }
-  }, 50);
+    // FORM box
+    gsap.from(formRef.current, {
+      opacity: 0,
+      y: 15,
+      duration: 0.7,
+      delay: 0.1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 90%",
+        once: true,
+      },
+    });
 
-  return () => clearInterval(interval);
-}, [animation]);
-
-
+    // INPUTS (no opacity → mobile fix)
+    gsap.from(inputsRef.current, {
+      y: 10,
+      duration: 0.5,
+      stagger: 0.08,
+      delay: 0.2,
+      ease: "power1.out",
+      scrollTrigger: {
+        trigger: formRef.current,
+        start: "top 88%",
+        once: true,
+      },
+    });
+  }, []);
 
   return (
     <div className={styles.contactSection} ref={sectionRef}>
       <div className={styles.lottieBox} ref={lottieRef}>
-        <Lottie animationData={animation} loop={true} className={styles.lottieAnim} />
+        {animation && (
+          <Lottie animationData={animation} loop className={styles.lottieAnim} />
+        )}
       </div>
 
-      <div className={styles.formBox} ref={formBoxRef}>
+      <div className={styles.formBox} ref={formRef}>
         <h2 className={styles.title}>Get in Touch With Us</h2>
         <p className={styles.subtitle}>
           Have questions? Send us a message and our team will reach out shortly.
         </p>
 
         <form>
-          <input
-            ref={(el) => (inputsRef.current[0] = el)}
-            type="text"
-            placeholder="Your Name"
-            value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-          />
-
-          <input
-            ref={(el) => (inputsRef.current[1] = el)}
-            type="email"
-            placeholder="Email Address"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-
-          <input
-            ref={(el) => (inputsRef.current[2] = el)}
-            type="phone"
-            placeholder="Your Mobile Number"
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          />
-
-          <input
-            ref={(el) => (inputsRef.current[3] = el)}
-            type="text"
-            placeholder="Company Name"
-            value={form.company}
-            onChange={(e) => setForm({ ...form, company: e.target.value })}
-          />
+          {["Your Name", "Email Address", "Your Mobile Number", "Company Name"].map(
+            (placeholder, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputsRef.current[i] = el)}
+                type="text"
+                placeholder={placeholder}
+              />
+            )
+          )}
 
           <textarea
             ref={(el) => (inputsRef.current[4] = el)}
             placeholder="Your Message"
-            value={form.message}
-            onChange={(e) => setForm({ ...form, message: e.target.value })}
           ></textarea>
 
           <button
-            ref={(el) => (inputsRef.current[5] = el)}
             type="submit"
+            ref={(el) => (inputsRef.current[5] = el)}
           >
             Send Inquiry
           </button>

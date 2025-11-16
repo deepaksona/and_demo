@@ -23,36 +23,42 @@ export default function Categories() {
   ];
 
   useEffect(() => {
-    // ⭐ WAIT UNTIL ALL IMAGES LOADED
-    const allImages = Array.from(document.querySelectorAll(`.${styles.itemImage}`));
+    const imagesLoaded = Array.from(
+      document.querySelectorAll(`.${styles.itemImage}`)
+    );
 
     let loaded = 0;
 
-    allImages.forEach((img) => {
+    imagesLoaded.forEach((img) => {
       if (img.complete) loaded++;
-      else img.onload = () => {
-        loaded++;
-        if (loaded === allImages.length) startAnimation();
-      };
+      else
+        img.onload = () => {
+          loaded++;
+          if (loaded === imagesLoaded.length) startAnimations();
+        };
     });
 
-    if (loaded === allImages.length) startAnimation();
+    if (loaded === imagesLoaded.length) startAnimations();
 
-    function startAnimation() {
-      setTimeout(() => ScrollTrigger.refresh(), 200);
-
-      gsap.from(itemsRef.current, {
-        opacity: 0,
-        y: 25,
-        duration: 0.7,
-        stagger: 0.12,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: itemsRef.current[0],
-          start: "top 92%",
-          once: true,
-        },
+    // ⭐ ANIMATE EACH CATEGORY INDIVIDUALLY
+    function startAnimations() {
+      itemsRef.current.forEach((item, i) => {
+        gsap.from(item, {
+          opacity: 0,
+          y: 30,
+          duration: 0.6,
+          delay: i * 0.10,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: item,
+            start: "top 92%",
+            once: true,
+          },
+        });
       });
+
+      // ⭐ extra mobile fix
+      setTimeout(() => ScrollTrigger.refresh(), 300);
     }
   }, []);
 
@@ -60,7 +66,8 @@ export default function Categories() {
     <div className={styles.categoriesSection}>
       <div className={styles.categoryTitle}>Browse Our Main Categories</div>
       <div className={styles.categorySubtitle}>
-        Explore a diverse and constantly growing catalog of products sourced directly from certified manufacturers:
+        Explore a diverse and constantly growing catalog of products sourced
+        directly from certified manufacturers:
       </div>
 
       <div className={styles.categoriesListSection}>

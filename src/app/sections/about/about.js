@@ -15,58 +15,31 @@ export default function About({ scrollRef }) {
   const imageRef = useRef(null);
 
   useEffect(() => {
-  if (!sectionRef.current) return;
+    if (!sectionRef.current) return;
 
-  const img = sectionRef.current.querySelector(`.${styles.imageContent}`);
+    // ⭐ Helper — best lightweight animation
+    const animate = (el, delay = 0) => {
+      gsap.from(el, {
+        opacity: 0,
+        y: 20,
+        duration: 0.7,
+        delay,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 92%",   // ⭐ mobile friendly
+          once: true,         // ⭐ best performance
+        },
+      });
+    };
 
-  function startAnim() {
-    setTimeout(() => ScrollTrigger.refresh(), 150);
+    animate(titleRef.current);
+    animate(subtitleRef.current, 0.12);
+    animate(imageRef.current, 0.22);
 
-    gsap.from(titleRef.current, {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 96%",
-        once: true,
-      },
-    });
-
-    gsap.from(subtitleRef.current, {
-      opacity: 0,
-      y: 18,
-      duration: 0.9,
-      delay: 0.1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 95%",
-        once: true,
-      },
-    });
-
-    gsap.from(imageRef.current, {
-      opacity: 0,
-      x: 30,
-      duration: 1,
-      delay: 0.15,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 93%",
-        once: true,
-      },
-    });
-  }
-
-
-  if (img.complete) startAnim();
-  else img.onload = startAnim;
-
-}, []);
-
+    // ⭐ tiny mobile refresh
+    setTimeout(() => ScrollTrigger.refresh(), 200);
+  }, []);
 
   return (
     <div className={styles.aboutSection} ref={sectionRef}>
@@ -76,9 +49,16 @@ export default function About({ scrollRef }) {
         </h2>
 
         <p className={styles.subtitle} ref={subtitleRef}>
-          A&D Global Trader is a full-service trading company dedicated to simplifying product sourcing for businesses across India. We connect Indian buyers with reliable manufacturers and wholesalers, ensuring access to high-quality products at competitive prices. Our network covers a wide range of categories, including electronics, home goods, kitchenware, industrial equipment, packaging materials, and daily-use consumer products.
+          A&D Global Trader is a full-service trading company dedicated to simplifying 
+          product sourcing for businesses across India. We connect Indian buyers with 
+          reliable manufacturers and wholesalers, ensuring access to high-quality 
+          products at competitive prices.
           <br /><br />
-          We manage the complete process—supplier verification, product sourcing, quality checks, documentation, logistics coordination, and safe delivery—so Indian businesses can focus on selling rather than struggling with supply chain issues. Our goal is to provide transparent, dependable, and hassle-free trade solutions tailored to the Indian market.
+          We manage the complete process—supplier verification, product sourcing, 
+          quality checks, documentation, logistics coordination, and safe delivery—so 
+          Indian businesses can focus on selling rather than struggling with supply 
+          chain issues. Our goal is to provide transparent, dependable, and hassle-free 
+          trade solutions tailored to the Indian market.
         </p>
       </div>
 

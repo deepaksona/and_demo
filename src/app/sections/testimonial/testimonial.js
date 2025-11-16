@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import styles from "./testimonial.module.css";
 
@@ -16,6 +17,7 @@ export default function Testimonial() {
   ];
 
   const [current, setCurrent] = useState(0);
+  const cardRefs = useRef([]);
 
   // ⭐ Auto slide
   useEffect(() => {
@@ -25,64 +27,36 @@ export default function Testimonial() {
     return () => clearInterval(timer);
   }, []);
 
-  // ⭐ GSAP optimized for mobile
-  const sectionRef = useRef(null);
-
+  // ⭐ Individual card fade-in (mobile safe)
   useEffect(() => {
-  if (!sectionRef.current) return;
+    if (!cardRefs.current.length) return;
 
-  
-  const imgs = Array.from(
-    sectionRef.current.querySelectorAll("img")
-  );
+    cardRefs.current.forEach((card) => {
+      if (!card) return;
 
-  let loaded = 0;
-
-  function startAnim() {
-    setTimeout(() => ScrollTrigger.refresh(), 150);
-
-    gsap.from(sectionRef.current, {
-      opacity: 0,
-      y: 25,
-      duration: 1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 96%", // mobile-friendly
-        once: true,
-      },
+      gsap.from(card, {
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: card,
+          start: "top 92%",
+          once: true,        // run only once → no lag
+        },
+      });
     });
-  }
-
-  // If NO images → run animation immediately
-  if (imgs.length === 0) {
-    startAnim();
-    return;
-  }
-
-  // Check image loading
-  imgs.forEach((img) => {
-    if (img.complete) {
-      loaded++;
-      if (loaded === imgs.length) startAnim();
-    } else {
-      img.onload = () => {
-        loaded++;
-        if (loaded === imgs.length) startAnim();
-      };
-    }
-  });
-}, []);
-
+  }, []);
 
   return (
-    <div className={styles.testimonialSection} ref={sectionRef}>
+    <div className={styles.testimonialSection}>
       <h2 className={styles.heading}>What Our Clients Say</h2>
 
       <div className={styles.slider}>
         {testimonials.map((t, index) => (
           <div
             key={index}
+            ref={(el) => (cardRefs.current[index] = el)}
             className={`${styles.card} ${
               current === index ? styles.active : styles.hidden
             }`}

@@ -1,6 +1,3 @@
-
-
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -13,8 +10,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Featured({ scrollRef }) {
   const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
 
-     const products = [
+   const products = [
     {
       id: 1,
       title: "Ultra-Wide Curved Monitor – Immersive Display",
@@ -46,48 +45,23 @@ export default function Featured({ scrollRef }) {
 
   const [index, setIndex] = useState(0);
 
+  // ⭐ SUPER FAST GSAP (mobile safe)
+  useEffect(() => {
+    if (!sectionRef.current) return;
 
- useEffect(() => {
-  if (!sectionRef.current) return;
-
-
-  const imgs = Array.from(
-    sectionRef.current.querySelectorAll("img")
-  );
-
-  let loaded = 0;
-
-  imgs.forEach((img) => {
-    if (img.complete) {
-      loaded++;
-    } else {
-      img.onload = () => {
-        loaded++;
-        if (loaded === imgs.length) startAnim();
-      };
-    }
-  });
-
-  if (loaded === imgs.length) startAnim();
-
-  function startAnim() {
-    setTimeout(() => ScrollTrigger.refresh(), 200);
-
-    gsap.from(sectionRef.current, {
+    gsap.from([titleRef.current, subtitleRef.current], {
       opacity: 0,
-      y: 30,
-      duration: 1,
-      ease: "power3.out",
+      y: 25,
+      duration: 0.7,
+      stagger: 0.15,
+      ease: "power2.out",
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 95%",   // ⭐ mobile-friendly
+        start: "top 92%",
         once: true,
       },
     });
-  }
-}, []);
-
-
+  }, []);
 
   // AUTO SLIDE
   useEffect(() => {
@@ -97,11 +71,8 @@ export default function Featured({ scrollRef }) {
     return () => clearInterval(interval);
   }, []);
 
-  const nextSlide = () =>
-    setIndex((prev) => (prev + 1) % products.length);
-
-  const prevSlide = () =>
-    setIndex((prev) => (prev - 1 + products.length) % products.length);
+  const nextSlide = () => setIndex((prev) => (prev + 1) % products.length);
+  const prevSlide = () => setIndex((prev) => (prev - 1 + products.length) % products.length);
 
   // TOUCH SWIPE
   const touchStartX = useRef(null);
@@ -111,49 +82,44 @@ export default function Featured({ scrollRef }) {
   };
 
   const handleTouchEnd = (e) => {
-    if (!touchStartX.current) return;
-    const diff = e.changedTouches[0].clientX - touchStartX.current;
-
-    if (diff > 50) prevSlide();
-    else if (diff < -50) nextSlide();
-
-    touchStartX.current = null;
-  };
-
-  // CLICK TO NAVIGATE
-  const handleClick = (e) => {
-    const width = e.currentTarget.clientWidth;
-    const clickX =
-      e.clientX - e.currentTarget.getBoundingClientRect().left;
-
-    if (clickX < width / 2) prevSlide();
-    else nextSlide();
-  };
+      if (!touchStartX.current) return;
+      const diff = e.changedTouches[0].clientX - touchStartX.current;
+      if (diff > 50) prevSlide();
+      else if (diff < -50) nextSlide();
+      touchStartX.current = null;
+    };
 
   return (
-    <div
-      className={styles.featuredSection}
-      ref={sectionRef} // ⭐ GSAP trigger
-    >
-      <div className={styles.title}>Top Trending Products This Month</div>
-      <div className={styles.subtitle}>
+    <div className={styles.featuredSection} ref={sectionRef}>
+      
+      {/* TITLE */}
+      <div className={styles.title} ref={titleRef}>
+        Top Trending Products This Month
+      </div>
+
+      <div className={styles.subtitle} ref={subtitleRef}>
         Discover our most popular products sourced from verified suppliers.
       </div>
 
+      {/* PRODUCT SECTION */}
       <div
         className={styles.featuredProductSection}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        onClick={handleClick}
+        onClick={(e) => {
+          const width = e.currentTarget.clientWidth;
+          const clickX = e.clientX - e.currentTarget.getBoundingClientRect().left;
+          clickX < width / 2 ? prevSlide() : nextSlide();
+        }}
       >
         <motion.div
           key={index}
-          initial={{ opacity: 0, x: 60 }}
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4 }}
           className={styles.featuredProductContainer}
         >
-          {/* IMAGE + BLUR BACKGROUND */}
+          {/* IMAGES */}
           <div className={styles.imageCatalog}>
             <div className={styles.mainImageWrapper}>
               <div
@@ -172,22 +138,20 @@ export default function Featured({ scrollRef }) {
 
             <div className={styles.imagesRow}>
               {products[index].images.map((img, i) => (
-                <img key={i} className={styles.otherImage} src={img} />
+                <img key={i} className={styles.otherImage} src={img} alt="product" />
               ))}
             </div>
           </div>
 
           {/* TEXT */}
           <div className={styles.textContent}>
-            <div className={styles.productTitle}>
-              {products[index].title}
-            </div>
+            <div className={styles.productTitle}>{products[index].title}</div>
 
             <div className={styles.productDescription}>
               {products[index].description}
             </div>
 
-            <button onClick={()=>scrollRef("contact")} className={styles.contactButton}>
+            <button onClick={() => scrollRef("contact")} className={styles.contactButton}>
               Contact To Know More
             </button>
           </div>
@@ -196,4 +160,3 @@ export default function Featured({ scrollRef }) {
     </div>
   );
 }
-

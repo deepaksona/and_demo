@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import Lottie from "lottie-react";
 import styles from "./whyus.module.css";
@@ -6,14 +7,15 @@ import { lotties } from "@/app/utilities/assets_path/assets_path";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Whyus() {
   const [animation, setAnimation] = useState(null);
 
   const sectionRef = useRef(null);
-  const titleRef = useRef(null);
   const lottieRef = useRef(null);
+  const titleRef = useRef(null);
   const listRefs = useRef([]);
 
   const whyChooseUs = [
@@ -31,62 +33,40 @@ export default function Whyus() {
   }, []);
 
   useEffect(() => {
-  if (!sectionRef.current || !animation) return;
+    if (!animation) return;
 
-  const ctx = gsap.context(() => {
+    // ⭐ reusable animation function (ULTRA FAST)
+    const animate = (el, delay = 0) => {
+      if (!el) return;
 
-    // ⭐ Wait for layout to settle
-    setTimeout(() => {
-      ScrollTrigger.refresh();  // ⭐ IMPORTANT FIX
-    }, 100);
+      gsap.from(el, {
+        opacity: 0,
+        y: 20,
+        duration: 0.7,
+        delay,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 92%", // ⭐ Mobile perfect
+          once: true,       // ⭐ only animate once
+        },
+      });
+    };
 
-    // ⭐ Lottie animation
-    gsap.from(lottieRef.current, {
-      opacity: 0,
-      y: 25,
-      duration: 0.8,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 95%",
-        once: true,
-      },
+    // ⭐ animate lottie
+    animate(lottieRef.current);
+
+    // ⭐ animate title
+    animate(titleRef.current, 0.1);
+
+    // ⭐ animate each list item individually
+    listRefs.current.forEach((item, i) => {
+      animate(item, i * 0.12 + 0.15);
     });
 
-    // ⭐ Title
-    gsap.from(titleRef.current, {
-      opacity: 0,
-      y: 18,
-      duration: 0.8,
-      delay: 0.1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 94%",
-        once: true,
-      },
-    });
-
-    // ⭐ List stagger
-    gsap.from(listRefs.current, {
-      opacity: 0,
-      y: 15,
-      duration: 0.6,
-      stagger: 0.12,
-      delay: 0.15,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: listRefs.current[0],
-        start: "top 92%",
-        once: true,
-      },
-    });
-
-  }, sectionRef);
-
-  return () => ctx.revert();
-}, [animation]);   
-
+    // ⭐ Small refresh for safe mobile layout
+    setTimeout(() => ScrollTrigger.refresh(), 200);
+  }, [animation]);
 
   return (
     <div className={styles.whyusSection} ref={sectionRef}>
@@ -107,16 +87,16 @@ export default function Whyus() {
             {whyChooseUs.map((e, index) => (
               <li
                 key={index}
-                className={styles.textItems}
                 ref={(el) => (listRefs.current[index] = el)}
+                className={styles.textItems}
               >
                 <b>{e.title}: </b>
                 {e.description}
               </li>
             ))}
           </ul>
-
         </div>
+
       </div>
     </div>
   );

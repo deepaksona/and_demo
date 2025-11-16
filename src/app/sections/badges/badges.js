@@ -29,28 +29,25 @@ export default function Badges() {
   ];
 
   useEffect(() => {
-    if (!badgesRef.current.length) return;
-
-    const ctx = gsap.context(() => {
-      // ⭐ delay refresh to avoid mobile height issues
-      setTimeout(() => ScrollTrigger.refresh(), 200);
-
-      gsap.from(badgesRef.current, {
+    // 🔥 Individual badge animation — most reliable on mobile
+    badgesRef.current.forEach((badge, i) => {
+      gsap.from(badge, {
         opacity: 0,
-        y: 35,
-        duration: 0.8,
-        stagger: 0.18,
-        ease: "power3.out",
+        y: 30,
+        duration: 0.6,
+        delay: i * 0.12,           // smooth stagger
+        ease: "power2.out",
         scrollTrigger: {
-          trigger: badgesRef.current[0],   // ⭐ ensuring first badge triggers animation
-          start: "top 92%",                // ⭐ mobile safe start point
-          once: true,                      // ⭐ only once — mobile performance boost
-          toggleActions: "play none none none",
+          trigger: badge,           // ⭐ individual trigger (never fails)
+          start: "top 92%",         // ⭐ mobile friendly
+          once: true,               // ⭐ better performance
         },
       });
     });
 
-    return () => ctx.revert();
+    // 🔥 Force refresh ONLY ONCE (global safe)
+    setTimeout(() => ScrollTrigger.refresh(), 300);
+
   }, []);
 
   return (
