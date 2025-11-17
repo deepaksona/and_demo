@@ -4,11 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Lottie from "lottie-react";
 import styles from "./whyus.module.css";
 import { lotties } from "@/app/utilities/assets_path/assets_path";
-
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Whyus() {
   const [animation, setAnimation] = useState(null);
@@ -35,43 +31,50 @@ export default function Whyus() {
   useEffect(() => {
     if (!animation) return;
 
-    // ⭐ reusable animation function (ULTRA FAST)
-    const animate = (el, delay = 0) => {
-      if (!el) return;
+    const elements = [
+      { el: lottieRef.current, delay: 0 },
+      { el: titleRef.current, delay: 0.1 },
+      ...listRefs.current.map((item, i) => ({
+        el: item,
+        delay: i * 0.12 + 0.15,
+      })),
+    ];
 
-      gsap.from(el, {
-        opacity: 0,
-        y: 20,
-        duration: 0.7,
-        delay,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 92%", // ⭐ Mobile perfect
-          once: true,       // ⭐ only animate once
-        },
-      });
-    };
+    // Intersection Observer (scroll-based trigger)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
-    // ⭐ animate lottie
-    animate(lottieRef.current);
+          elements.forEach((obj) => {
+            gsap.fromTo(
+              obj.el,
+              { opacity: 0, y: 20 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                delay: obj.delay,
+                ease: "power2.out",
+              }
+            );
+          });
 
-    // ⭐ animate title
-    animate(titleRef.current, 0.1);
+          observer.unobserve(entry.target); // run once
+        });
+      },
+      { threshold: 0.2 }
+    );
 
-    // ⭐ animate each list item individually
-    listRefs.current.forEach((item, i) => {
-      animate(item, i * 0.12 + 0.15);
-    });
+    observer.observe(sectionRef.current);
 
-    // ⭐ Small refresh for safe mobile layout
-    setTimeout(() => ScrollTrigger.refresh(), 200);
+    return () => observer.disconnect();
   }, [animation]);
 
   return (
     <div className={styles.whyusSection} ref={sectionRef}>
       <div className={styles.whyusRow}>
-        
+
         {animation && (
           <div className={styles.lottieWrapper} ref={lottieRef}>
             <Lottie animationData={animation} />

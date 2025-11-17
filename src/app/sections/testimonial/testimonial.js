@@ -2,10 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import styles from "./testimonial.module.css";
-
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Testimonial() {
   const testimonials = [
@@ -27,25 +24,37 @@ export default function Testimonial() {
     return () => clearInterval(timer);
   }, []);
 
-  // ⭐ Individual card fade-in (mobile safe)
+  // ⭐ Animate cards when entering viewport (NO ScrollTrigger)
   useEffect(() => {
     if (!cardRefs.current.length) return;
 
-    cardRefs.current.forEach((card) => {
-      if (!card) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
-      gsap.from(card, {
-        opacity: 0,
-        y: 20,
-        duration: 0.6,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: card,
-          start: "top 92%",
-          once: true,        // run only once → no lag
-        },
-      });
+          gsap.fromTo(
+            entry.target,
+            { opacity: 0, y: 20 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power2.out",
+            }
+          );
+
+          observer.unobserve(entry.target); // run once
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    cardRefs.current.forEach((card) => {
+      if (card) observer.observe(card);
     });
+
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -74,7 +83,9 @@ export default function Testimonial() {
         {testimonials.map((_, i) => (
           <span
             key={i}
-            className={`${styles.dot} ${current === i ? styles.activeDot : ""}`}
+            className={`${styles.dot} ${
+              current === i ? styles.activeDot : ""
+            }`}
           ></span>
         ))}
       </div>

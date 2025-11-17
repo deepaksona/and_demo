@@ -1,10 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./badges.module.css";
 import { images } from "@/app/utilities/assets_path/assets_path";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Badges() {
   const badgesRef = useRef([]);
@@ -29,25 +26,38 @@ export default function Badges() {
   ];
 
   useEffect(() => {
-    // 🔥 Individual badge animation — most reliable on mobile
-    badgesRef.current.forEach((badge, i) => {
-      gsap.from(badge, {
-        opacity: 0,
-        y: 30,
-        duration: 0.6,
-        delay: i * 0.12,           // smooth stagger
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: badge,           // ⭐ individual trigger (never fails)
-          start: "top 92%",         // ⭐ mobile friendly
-          once: true,               // ⭐ better performance
+    let observer;
+
+    if (typeof window !== "undefined") {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const index = badgesRef.current.indexOf(entry.target);
+
+              gsap.fromTo(
+                entry.target,
+                { opacity: 0, y: 30 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.7,
+                  ease: "power2.out",
+                  delay: index * 0.12 // nice stagger
+                }
+              );
+
+              observer.unobserve(entry.target);
+            }
+          });
         },
-      });
-    });
+        { threshold: 0.2 } // 20% visible → animate
+      );
 
-    // 🔥 Force refresh ONLY ONCE (global safe)
-    setTimeout(() => ScrollTrigger.refresh(), 300);
+      badgesRef.current.forEach((badge) => observer.observe(badge));
+    }
 
+    return () => observer && observer.disconnect();
   }, []);
 
   return (

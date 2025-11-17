@@ -4,16 +4,13 @@ import { motion } from "framer-motion";
 import styles from "./freatured.module.css";
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Featured({ scrollRef }) {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
 
-   const products = [
+     const products = [
     {
       id: 1,
       title: "Ultra-Wide Curved Monitor – Immersive Display",
@@ -43,24 +40,39 @@ export default function Featured({ scrollRef }) {
     },
   ];
 
+
   const [index, setIndex] = useState(0);
 
-  // ⭐ SUPER FAST GSAP (mobile safe)
+  // ⭐ Animate Title + Subtitle when visible (NO ScrollTrigger)
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    gsap.from([titleRef.current, subtitleRef.current], {
-      opacity: 0,
-      y: 25,
-      duration: 0.7,
-      stagger: 0.15,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 92%",
-        once: true,
+    const elements = [titleRef.current, subtitleRef.current];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.fromTo(
+              elements,
+              { opacity: 0, y: 25 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                stagger: 0.15,
+                ease: "power2.out",
+              }
+            );
+            observer.unobserve(entry.target);
+          }
+        });
       },
-    });
+      { threshold: 0.2 }
+    );
+
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
   }, []);
 
   // AUTO SLIDE
@@ -72,26 +84,24 @@ export default function Featured({ scrollRef }) {
   }, []);
 
   const nextSlide = () => setIndex((prev) => (prev + 1) % products.length);
-  const prevSlide = () => setIndex((prev) => (prev - 1 + products.length) % products.length);
+  const prevSlide = () =>
+    setIndex((prev) => (prev - 1 + products.length) % products.length);
 
   // TOUCH SWIPE
   const touchStartX = useRef(null);
-
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
   };
-
   const handleTouchEnd = (e) => {
-      if (!touchStartX.current) return;
-      const diff = e.changedTouches[0].clientX - touchStartX.current;
-      if (diff > 50) prevSlide();
-      else if (diff < -50) nextSlide();
-      touchStartX.current = null;
-    };
+    if (!touchStartX.current) return;
+    const diff = e.changedTouches[0].clientX - touchStartX.current;
+    if (diff > 50) prevSlide();
+    else if (diff < -50) nextSlide();
+    touchStartX.current = null;
+  };
 
   return (
     <div className={styles.featuredSection} ref={sectionRef}>
-      
       {/* TITLE */}
       <div className={styles.title} ref={titleRef}>
         Top Trending Products This Month
@@ -108,7 +118,8 @@ export default function Featured({ scrollRef }) {
         onTouchEnd={handleTouchEnd}
         onClick={(e) => {
           const width = e.currentTarget.clientWidth;
-          const clickX = e.clientX - e.currentTarget.getBoundingClientRect().left;
+          const clickX =
+            e.clientX - e.currentTarget.getBoundingClientRect().left;
           clickX < width / 2 ? prevSlide() : nextSlide();
         }}
       >
@@ -138,20 +149,30 @@ export default function Featured({ scrollRef }) {
 
             <div className={styles.imagesRow}>
               {products[index].images.map((img, i) => (
-                <img key={i} className={styles.otherImage} src={img} alt="product" />
+                <img
+                  key={i}
+                  className={styles.otherImage}
+                  src={img}
+                  alt="product"
+                />
               ))}
             </div>
           </div>
 
           {/* TEXT */}
           <div className={styles.textContent}>
-            <div className={styles.productTitle}>{products[index].title}</div>
+            <div className={styles.productTitle}>
+              {products[index].title}
+            </div>
 
             <div className={styles.productDescription}>
               {products[index].description}
             </div>
 
-            <button onClick={() => scrollRef("contact")} className={styles.contactButton}>
+            <button
+              onClick={() => scrollRef("contact")}
+              className={styles.contactButton}
+            >
               Contact To Know More
             </button>
           </div>

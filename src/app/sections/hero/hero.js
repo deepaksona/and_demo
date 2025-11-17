@@ -1,9 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./hero.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero({ scrollRef }) {
   const sectionRef = useRef(null);
@@ -12,51 +9,47 @@ export default function Hero({ scrollRef }) {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      
-      // ⭐ IMPORTANT: Delay GSAP init so mobile height issues fix ho jaye
-      setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 200);
+    const elements = [
+      { ref: headingRef, y: 35, delay: 0 },
+      { ref: subheadingRef, y: 30, delay: 0.15 },
+      { ref: buttonRef, scale: 0.85, delay: 0.25 },
+    ];
 
-      // ⭐ Universal animation settings (mobile safe)
-      const common = {
-        duration: 0.9,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 95%",       // ⭐ Mobile-friendly trigger
-          toggleActions: "play none none none",
-          once: true              // ⭐ Only once → no lag
-        }
-      };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            elements.forEach((el) => {
+              if (entry.target === sectionRef.current) {
+                gsap.fromTo(
+                  el.ref.current,
+                  {
+                    opacity: 0,
+                    y: el.y || 0,
+                    scale: el.scale || 1,
+                  },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    duration: 0.9,
+                    delay: el.delay,
+                    ease: "power3.out",
+                  }
+                );
+              }
+            });
 
-      // Heading Animation
-      gsap.from(headingRef.current, {
-        y: 35,
-        opacity: 0,
-        ...common
-      });
+            observer.unobserve(entry.target); // Runs only once
+          }
+        });
+      },
+      { threshold: 0.2 } // 20% visible → animate
+    );
 
-      // Subheading Animation
-      gsap.from(subheadingRef.current, {
-        y: 30,
-        opacity: 0,
-        delay: 0.15,
-        ...common
-      });
+    if (sectionRef.current) observer.observe(sectionRef.current);
 
-      // Button Animation
-      gsap.from(buttonRef.current, {
-        scale: 0.85,
-        opacity: 0,
-        delay: 0.25,
-        ease: "back.out(1.8)",
-        ...common
-      });
-    }, sectionRef);
-
-    return () => ctx.revert(); // Cleanup
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -71,7 +64,9 @@ export default function Hero({ scrollRef }) {
         </div>
 
         <div className={styles.subheading} ref={subheadingRef}>
-          A&D Global Trader brings buyers and suppliers together on one secure platform. Discover verified manufacturers, competitive pricing, and smooth global shipping all in one place.
+          A&D Global Trader brings buyers and suppliers together on one secure
+          platform. Discover verified manufacturers, competitive pricing, and
+          smooth global shipping all in one place.
         </div>
 
         <button

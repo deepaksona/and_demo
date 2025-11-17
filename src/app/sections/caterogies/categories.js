@@ -2,11 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./categories.module.css";
 import { images } from "@/app/utilities/assets_path/assets_path";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function Categories() {
   const itemsRef = useRef([]);
@@ -23,42 +20,53 @@ export default function Categories() {
   ];
 
   useEffect(() => {
+    // Wait until all category images are loaded
     const imagesLoaded = Array.from(
       document.querySelectorAll(`.${styles.itemImage}`)
     );
 
     let loaded = 0;
 
+    const checkAndStart = () => {
+      loaded++;
+      if (loaded === imagesLoaded.length) startObserver();
+    };
+
     imagesLoaded.forEach((img) => {
-      if (img.complete) loaded++;
-      else
-        img.onload = () => {
-          loaded++;
-          if (loaded === imagesLoaded.length) startAnimations();
-        };
+      if (img.complete) checkAndStart();
+      else img.onload = checkAndStart;
     });
 
-    if (loaded === imagesLoaded.length) startAnimations();
+    // ---------------------------
+    // ⭐ Intersection Observer + GSAP
+    // ---------------------------
+    function startObserver() {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const index = itemsRef.current.indexOf(entry.target);
 
-    // ⭐ ANIMATE EACH CATEGORY INDIVIDUALLY
-    function startAnimations() {
-      itemsRef.current.forEach((item, i) => {
-        gsap.from(item, {
-          opacity: 0,
-          y: 30,
-          duration: 0.6,
-          delay: i * 0.10,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: item,
-            start: "top 92%",
-            once: true,
-          },
-        });
-      });
+              gsap.fromTo(
+                entry.target,
+                { opacity: 0, y: 30 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  duration: 0.6,
+                  delay: index * 0.10, // smooth stagger
+                  ease: "power2.out",
+                }
+              );
 
-      // ⭐ extra mobile fix
-      setTimeout(() => ScrollTrigger.refresh(), 300);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.2 } // animate when 20% in view
+      );
+
+      itemsRef.current.forEach((item) => observer.observe(item));
     }
   }, []);
 

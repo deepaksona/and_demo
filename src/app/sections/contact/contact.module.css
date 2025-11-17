@@ -65,7 +65,8 @@ font-family: "Inter", sans-serif;
         outline: none;
         transition: 0.3s;
         background-color: white;
-
+        color: black;
+        
         &:focus {
           border-color: #13304f;
           box-shadow: 0 0 5px rgba(19, 48, 79, 0.3);

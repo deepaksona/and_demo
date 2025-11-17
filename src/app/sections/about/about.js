@@ -2,11 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { images } from "@/app/utilities/assets_path/assets_path";
 import styles from "./about.module.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function About({ scrollRef }) {
   const sectionRef = useRef(null);
@@ -17,28 +14,41 @@ export default function About({ scrollRef }) {
   useEffect(() => {
     if (!sectionRef.current) return;
 
-    // ⭐ Helper — best lightweight animation
-    const animate = (el, delay = 0) => {
-      gsap.from(el, {
-        opacity: 0,
-        y: 20,
-        duration: 0.7,
-        delay,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: el,
-          start: "top 92%",   // ⭐ mobile friendly
-          once: true,         // ⭐ best performance
-        },
-      });
-    };
+    const elements = [
+      { el: titleRef.current, delay: 0 },
+      { el: subtitleRef.current, delay: 0.12 },
+      { el: imageRef.current, delay: 0.22 },
+    ];
 
-    animate(titleRef.current);
-    animate(subtitleRef.current, 0.12);
-    animate(imageRef.current, 0.22);
+    // Intersection Observer + GSAP
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
-    // ⭐ tiny mobile refresh
-    setTimeout(() => ScrollTrigger.refresh(), 200);
+          elements.forEach((item) => {
+            gsap.fromTo(
+              item.el,
+              { opacity: 0, y: 20 },
+              {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                delay: item.delay,
+                ease: "power2.out",
+              }
+            );
+          });
+
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => observer.disconnect();
   }, []);
 
   return (
